@@ -1,0 +1,29 @@
+NET VSYNC	LOC = "P1" | IOSTANDARD=LVTTL;
+NET HSYNC	LOC = "P5" | IOSTANDARD=LVTTL;
+NET VID		LOC = "P7" | IOSTANDARD=LVTTL;
+
+NET RX      LOC="P11" | IOSTANDARD=LVTTL;
+NET TX      LOC="P9" | IOSTANDARD=LVTTL;
+
+#Created by Constraints Editor (xc6slx9-tqg144-3) - 2012/11/05
+#NET "clk" TNM_NET = clk;
+#TIMESPEC TS_clk = PERIOD "clk" 50 MHz HIGH 50%;
+
+# PlanAhead Generated physical constraints 
+NET "clk" LOC = P56;
+NET "rst_n" LOC = P38;
+
+#NET "cclk" LOC = P70;
+
+#NET "spi_mosi" LOC = P44;
+#NET "spi_miso" LOC = P45;
+#NET "spi_ss" LOC = P48;
+#NET "spi_sck" LOC = P43;
+#NET "spi_channel<0>" LOC = P46;
+#NET "spi_channel<1>" LOC = P61;
+#NET "spi_channel<2>" LOC = P62;
+#NET "spi_channel<3>" LOC = P65;
+#
+#NET "avr_tx" LOC = P55;
+#NET "avr_rx" LOC = P59;
+#NET "avr_rx_busy" LOC = P39;

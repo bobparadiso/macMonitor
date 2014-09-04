@@ -1,0 +1,10 @@
+*.*
+isim
+!*.xco
+!*.xaw
+!*.coe
+!.gitignore
+!*.ucf
+!*.vhd
+!*.xise
+
