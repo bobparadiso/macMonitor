@@ -123,10 +123,11 @@ ENTITY BMG_STIM_GEN IS
             CLKA : IN STD_LOGIC;
             CLKB : IN STD_LOGIC;
             TB_RST : IN STD_LOGIC;
-            ADDRA: OUT  STD_LOGIC_VECTOR(17 DOWNTO 0) := (OTHERS => '0'); 
-            DINA : OUT  STD_LOGIC_VECTOR(0 DOWNTO 0) := (OTHERS => '0'); 
+            ADDRA: OUT  STD_LOGIC_VECTOR(16 DOWNTO 0) := (OTHERS => '0'); 
+            DINA : OUT  STD_LOGIC_VECTOR(3 DOWNTO 0) := (OTHERS => '0'); 
+            ENA : OUT STD_LOGIC :='0';
             WEA : OUT STD_LOGIC_VECTOR (0 DOWNTO 0) := (OTHERS => '0');
-            ADDRB: OUT  STD_LOGIC_VECTOR(17 DOWNTO 0) := (OTHERS => '0');
+            ADDRB: OUT  STD_LOGIC_VECTOR(16 DOWNTO 0) := (OTHERS => '0');
 	        CHECK_DATA: OUT STD_LOGIC:='0'
 	  );
 END BMG_STIM_GEN;
@@ -137,7 +138,7 @@ ARCHITECTURE BEHAVIORAL OF BMG_STIM_GEN IS
 CONSTANT ZERO                    : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 SIGNAL   WRITE_ADDR              : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
 SIGNAL   READ_ADDR               : STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0');
-SIGNAL   DINA_INT                : STD_LOGIC_VECTOR(0 DOWNTO 0) := (OTHERS => '0');
+SIGNAL   DINA_INT                : STD_LOGIC_VECTOR(3 DOWNTO 0) := (OTHERS => '0');
 SIGNAL   DO_WRITE                : STD_LOGIC := '0';
 SIGNAL   DO_READ                 : STD_LOGIC := '0';
 SIGNAL   DO_READ_R               : STD_LOGIC := '0';
@@ -164,21 +165,21 @@ SIGNAL   PORTA_WR_R2             : STD_LOGIC  := '0';
 SIGNAL   PORTA_WR_R1             : STD_LOGIC  := '0';
 
 CONSTANT WR_RD_DEEP_COUNT :INTEGER :=8;
-CONSTANT WR_DEEP_COUNT    : INTEGER := if_then_else((18 <= 18),WR_RD_DEEP_COUNT,
-                                              ((1/1)*WR_RD_DEEP_COUNT));
-CONSTANT RD_DEEP_COUNT    : INTEGER := if_then_else((18 <= 18),WR_RD_DEEP_COUNT,
-                                              ((1/1)*WR_RD_DEEP_COUNT));
+CONSTANT WR_DEEP_COUNT    : INTEGER := if_then_else((17 <= 17),WR_RD_DEEP_COUNT,
+                                              ((4/4)*WR_RD_DEEP_COUNT));
+CONSTANT RD_DEEP_COUNT    : INTEGER := if_then_else((17 <= 17),WR_RD_DEEP_COUNT,
+                                              ((4/4)*WR_RD_DEEP_COUNT));
 
 BEGIN
 
-   ADDRA <= WRITE_ADDR(17 DOWNTO 0) ;
+   ADDRA <= WRITE_ADDR(16 DOWNTO 0) ;
    DINA  <= DINA_INT ;
-   ADDRB <= READ_ADDR(17 DOWNTO 0) when (DO_READ='1') else (OTHERS=>'0');
+   ADDRB <= READ_ADDR(16 DOWNTO 0) when (DO_READ='1') else (OTHERS=>'0');
    CHECK_DATA <= DO_READ;
 
   RD_ADDR_GEN_INST:ENTITY work.ADDR_GEN
     GENERIC MAP(
-      C_MAX_DEPTH => 175104 ,
+      C_MAX_DEPTH => 76800 ,
       RST_INC => 1    )
     PORT MAP(
        CLK        => CLKB,
@@ -191,7 +192,7 @@ BEGIN
 
   WR_ADDR_GEN_INST:ENTITY work.ADDR_GEN
     GENERIC MAP( 
-      C_MAX_DEPTH => 175104,
+      C_MAX_DEPTH => 76800,
       RST_INC => 1    )
     PORT MAP(
        CLK        => CLKA,
@@ -204,8 +205,8 @@ BEGIN
 
   WR_DATA_GEN_INST:ENTITY work.DATA_GEN 
     GENERIC MAP ( 
-       DATA_GEN_WIDTH => 1,
-       DOUT_WIDTH     => 1 ,
+       DATA_GEN_WIDTH => 4,
+       DOUT_WIDTH     => 4 ,
        DATA_PART_CNT  => 1,
        SEED           => 2)
     PORT MAP (
@@ -422,6 +423,7 @@ BEGIN
  END PROCESS;
 
  
+   ENA <= DO_WRITE ;
  
    WEA(0) <= DO_WRITE ;
  
